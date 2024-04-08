@@ -1,0 +1,25 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: create-clip
+  namespace: argo-events
+spec:
+  template:
+    spec:
+      containers:
+      - name: create-clip
+        image: "sjw980523/create_clip:v17"
+        ports:
+        - containerPort: 5001
+        env:
+        - name: VIDEO_PATH
+        value: "http://192.168.12.215:32601/stream-video"
+                        #- name: START_TIME
+                        #value: "7"
+        volumeMounts:
+        - name: clip
+          mountPath: /app/clip
+      volumes:
+      - name: clip
+        persistentVolumeClaim:
+          claimName: local-pvc
